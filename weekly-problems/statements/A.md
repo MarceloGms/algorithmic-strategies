@@ -1,6 +1,6 @@
 <h1 align="center">Party icebreaker</h1>
 
-## Description
+### Description
 
 To cellebrate its success, a new company throws a really big party. Everyone who is someone in town is invited. To help people get to know each other, each guest is given a card with a number (a positive integer) upon arrival, and asked to find two other guests in the crowd to form a group of three such that:
 

@@ -1,12 +1,14 @@
 <h1 align="center">A new chess game</h1>
 
-## Description
+### Description
 
 You are working on a new chess computer game with an infinite chessboard and only knights. Of course, you cannot have an infinite chessboard because you don't have infinite RAM! But you can compute the largest chessboard that you need since you know the current location of the knights and how many moves they can do.
 
 The goal is to know the number of distinct chessboard cells that can be visited by n knights after a given number of moves of each knight. You can assume that two or more knights can be in the same cell at the same time.
 
-We remind you that a knight can perform 8 different moves.
+We remind you that a knight can perform 8 different moves, as shown in the picture below.
+
+![alt text](img/image.png)
 
 ### Input
 
