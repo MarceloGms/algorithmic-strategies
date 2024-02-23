@@ -8,6 +8,8 @@ The goal is to know the number of distinct chessboard cells that can be visited 
 
 We remind you that a knight can perform 8 different moves, as shown in the picture below.
 
+![Screenshot 2024-02-23 111020](https://github.com/MarceloGms/algorithmic-strategies/assets/126262388/0b24aeff-269a-4cbc-8104-6f06d5b2d186)
+
 ### Input
 
 The first line indicates the number of knights (1 <= n <= 30). Then, n lines follow. Each line gives the position (x,y) of a knight in the chessboard as well as the number of moves m (0 <= m <= 7) that it is allowed to perform. You may assume that knights never travel beyond coordinates -200 to 200.
