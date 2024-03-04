@@ -27,3 +27,15 @@ buildd:
 
 rund: buildd
 	@powershell Get-Content weekly-problems\inp\inp-D.txt |.\weekly-problems\exe\D
+
+# HARD PROBLEMS
+
+# A
+buildpa:
+	@g++ -std=c++17 -O2 hard-problems\src\A-aztec_vaults\ProblemA.cpp -lm -Wall -o hard-problems\exe\pA
+
+runpa: buildpa
+	@powershell Get-Content hard-problems\inp\inp-A.txt |.\hard-problems\exe\pA
+
+testA: buildpa
+	@powershell -ExecutionPolicy Bypass -File .\hard-problems/inp/testA.ps1
