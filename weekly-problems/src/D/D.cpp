@@ -7,9 +7,13 @@ int Path(int n, vector<vector<int>> P) {
   vector<vector<int>> DP(n, vector<int>(n, 0));
   DP[0][0] = P[0][0];
   for (int i = 1; i < n; i++) {
-    for (int j = 0; j < i; j++) {
-      DP[i][j] = P[i][j] + max((j > 0) ? DP[i-1][j-1] : 0, DP[i-1][j]);
+    DP[i][0] = P[i][0] + DP[i-1][0];
+
+    for (int j = 1; j < i; j++) {
+      DP[i][j] = P[i][j] + max(DP[i-1][j-1], DP[i-1][j]);
     }
+
+    DP[i][i] = P[i][i] + DP[i-1][i-1];
   }
   int max_value = -1;
   for (int i = 0; i < n; i++) {
