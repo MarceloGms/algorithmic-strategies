@@ -1,8 +1,8 @@
 #include <iostream>
 using namespace std;
 
-bool ZeManel(int len) {
-  if all nodes were visited
+void ZeManel(int len) {
+  /* if all nodes were visited
     if best > len
     best = len
   for i = 1 ... N
@@ -16,9 +16,17 @@ bool ZeManel(int len) {
           ZeManel(len + M[i,j])
           visited[j] = false
           links[i]--
-          links[j]--
+          links[j]-- */
 }
 
 int main() {
+  int n, m, k;
+  cin >> n >> m >> k;
+  if (n > 12 || m > 40 || k > n)
+    return 1;
+  
+  cout << n << m << k << endl;
+  cin >> n >> m >> k;
+  cout << n << m << k << endl;
   return 0;
 }
