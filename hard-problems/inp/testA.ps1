@@ -6,22 +6,20 @@ the treasure is lost!
 4
 '@
 
-$actualLines = $cppOutput -split "`n"
-$expectedLines = $expectedOutput -split "`n"
+$output = $cppOutput -split "`n"
+$expectedOutput = $expectedOutput -split "`n"
 
 function CheckTreasureResult($actual, $expected) {
-    $pass = $true
-
     for ($i = 0; $i -lt $actual.Count; $i++) {
-        $actualLine = $actual[$i].Trim()
-        $expectedLine = $expected[$i].Trim()
+        $actualOutput = $actual[$i].Trim()
+        $expectedOutput = $expected[$i].Trim()
 
-        if ($actualLine -eq $expectedLine) {
+        if ($actualOutput -eq $expectedOutput) {
             Write-Host -ForegroundColor Green "$($i + 1): Pass"
         } else {
-            Write-Host -ForegroundColor Red "$($i + 1): Fail (Expected: '$expectedLine', Actual: '$actualLine')"
+            Write-Host -ForegroundColor Red "$($i + 1): Fail (Expected: '$expectedOutput', Actual: '$actualOutput')"
         }
     }
 }
 
-CheckTreasureResult $actualLines $expectedLines
+CheckTreasureResult $output $expectedOutput

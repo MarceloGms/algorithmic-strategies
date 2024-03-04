@@ -38,4 +38,4 @@ runpa: buildpa
 	@powershell Get-Content hard-problems\inp\inp-A.txt |.\hard-problems\exe\pA
 
 testA: buildpa
-	@powershell -ExecutionPolicy Bypass -File .\hard-problems/inp/testA.ps1
+	@powershell .\hard-problems\inp\testA.ps1
