@@ -4,6 +4,10 @@ $expectedOutput = @'
 3
 the treasure is lost!
 4
+5
+3
+the treasure is lost!
+the treasure is lost!
 '@
 
 $output = $cppOutput -split "`n"
