@@ -1,6 +1,7 @@
 #include<iostream>
 #include<vector>
 #include<algorithm>
+#include<unordered_map>
 using namespace std;
 
 void glRotateRight(int x, int y, vector<vector<int>> &matrix) {
@@ -16,41 +17,70 @@ void glRotateLeft(int x, int y, vector<vector<int>> &matrix) {
 }
 
 bool isSolved(const vector<vector<int>>& grid) {
-  int target = 1;
-  for (const auto& row : grid) {
-    for (int cell : row) {
-      if (cell != target) {
+  int numRows = grid.size();
+  int numCols = grid[0].size();
+  
+  for (int i = 0; i < numRows; ++i) {
+    for (int j = 0; j < numCols; ++j) {
+      if (grid[i][j] != (i + 1)) {
         return false;
       }
-      target = (target % grid[0].size()) + 1;
     }
   }
+  
   return true;
 }
 
-int Vault(int x, int y, vector<vector<int>> &grid, int r, int c, int m, string last) {
-  int nMoves = 0;
-  if (m > 0) {
-    if (last != "R") {
-      glRotateLeft(x, y, grid);
-      nMoves++;
-      last = "L";
+bool verifyInput(const vector<vector<int>>& grid, int r, int c) {
+  unordered_map<int, int> counts;
+    for (const auto& row : grid) {
+        for (int num : row) {
+            counts[num]++;
+        }
     }
-    else if (last != "L") {
-      glRotateRight(x, y, grid);
-      nMoves++;
-      last = "R";
+    for (int i = 1; i <= r; i++) {
+        if (counts[i] != c) {
+            return false;
+        }
     }
-    for (int i = 0; i < r-1; i++) {
-      for (int j = 0; j < c-1; j++) {
-        Vault(x, y, grid, r, c, m-1, last);
-        Vault(x+1, y, grid, r, c, m-1, last);
-        Vault(x+1, y+1, grid, r, c, m-1, last);
-        Vault(x, y+1, grid, r, c, m-1, last);
-      }
+  
+  return true;
+}
+
+void Vault(int x, int y, vector<vector<int>> &grid, int r, int c, int maxMoves, int moves, int &minMoves) {
+  if (moves > maxMoves || moves >= minMoves){
+    return;
+  }
+
+  if (moves <= maxMoves && isSolved(grid)){
+    if (moves < minMoves)
+      minMoves = moves;
+    return;
+  }
+
+  for(int i = 0; i < (int) grid.size()-1; i++){
+    for (int j = 0; j < (int) grid[0].size()-1; j++){
+      
+      // rotate right
+      glRotateRight(i, j, grid);
+      Vault(i, j, grid, r, c, maxMoves, moves+1, minMoves);
+      
+      // undo rotation
+      glRotateLeft(i, j, grid);
+      
+      // rotate left
+      glRotateLeft(i, j, grid);
+      Vault(i, j, grid, r, c, maxMoves, moves+1, minMoves);
+
+      // rotate left again
+      glRotateLeft(i, j, grid);
+      Vault(i, j, grid, r, c, maxMoves, moves+2, minMoves);
+
+      // undo rotations
+      glRotateLeft(i, j, grid);
+      glRotateLeft(i, j, grid);
     }
   }
-  return nMoves;
 }
 
 int main() {
@@ -75,17 +105,19 @@ int main() {
       }
       grid.push_back(row);
     }
-    for (const auto& innerVec : grid) {
-      for (int element : innerVec) {
-        cout << element << " ";
-      }
-      cout << endl;
+    if (!verifyInput(grid, r, c)) {
+      cout << "the treasure is lost!" << endl;
+      continue;
     }
-    int result = Vault(0, 0, grid, r, c, m, "");
-    if (result <= m && isSolved(grid))
-      cout << result << endl;
+
+    int minMoves = m + 1;
+    Vault(0, 0, grid, r, c, m, 0, minMoves);
+    
+    if (minMoves <= m)
+      cout << minMoves << endl;
     else 
       cout << "the treasure is lost!" << endl;
   }
   return 0;
 }
+
