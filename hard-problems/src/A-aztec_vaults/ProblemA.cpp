@@ -56,6 +56,17 @@ bool verifyInput(const vector<vector<int>>& grid, int r, int c) {
   return true;
 }
 
+bool verifyInputMoves(const vector<vector<int>>& grid, int r, int c, int moves) {
+  for (int i = 0; i < r; i++) {
+    for (int j = 0; j < c; j++) {
+      if (grid[i][j] < i - moves + 1 + j - moves + 1 || grid[i][j] > i + moves + 1) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 void Vault(vector<vector<int>> &grid, int r, int c, int maxMoves, int moves, int &minMoves) {
   if (moves > maxMoves || moves >= minMoves){
     return;
@@ -66,6 +77,10 @@ void Vault(vector<vector<int>> &grid, int r, int c, int maxMoves, int moves, int
       minMoves = moves;
     return;
   }
+
+  if (verifyInputMoves(grid, r, c, maxMoves - moves) == false){
+    return;
+  } 
 
   int lines_sorted = 0;
   for (int t = r-1; t >= 0; t--){
@@ -88,9 +103,6 @@ void Vault(vector<vector<int>> &grid, int r, int c, int maxMoves, int moves, int
       i = lines_sorted;
     }
     for (int j = 0; j < c-1; j++){
-      if (grid[i][j] < i - (maxMoves-moves) + 1 || grid[i][j] > i + (maxMoves-moves) + 1) {
-        return;
-      }
       glRotateRight(i, j, grid);
       Vault(grid, r, c, maxMoves, moves+1, minMoves);
 
@@ -100,6 +112,7 @@ void Vault(vector<vector<int>> &grid, int r, int c, int maxMoves, int moves, int
       glRotateRight(i, j, grid);
       Vault(grid, r, c, maxMoves, moves+1, minMoves);
       glRotateRight(i, j, grid);
+
     }
   }
 }
@@ -128,6 +141,11 @@ int main() {
     }
 
     if (!verifyInput(grid, r, c)) {
+      cout << "the treasure is lost!" << endl;
+      continue;
+    }
+
+    if (!verifyInputMoves(grid, r, c, m)) {
       cout << "the treasure is lost!" << endl;
       continue;
     }
