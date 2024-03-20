@@ -139,8 +139,9 @@ void Vault(int x, int y, vector<vector<int>> &grid, int r, int c, int maxMoves, 
       // int key = x * c + y;
       auto h = history.find({i,j});
       // 0 -> left, 1 -> right
+      int last = lastThree(h->second);
       if (h == history.end() || h->second.empty() ||  h->second.back() != 0) {
-        if (lastThree(h->second) != 1) {
+        if (last != 1) {
           // rotate right
           glRotateRight(i, j, grid);
           Vault(i, j, grid, r, c, maxMoves, moves+1, minMoves, history);
@@ -157,7 +158,7 @@ void Vault(int x, int y, vector<vector<int>> &grid, int r, int c, int maxMoves, 
       }
       
       if (h == history.end() || h->second.empty() || h->second.back() != 1) {
-        if (lastThree(h->second) != 0) {
+        if (last != 0) {
           // rotate left
           glRotateLeft(i, j, grid);
           Vault(i, j, grid, r, c, maxMoves, moves+1, minMoves, history);
