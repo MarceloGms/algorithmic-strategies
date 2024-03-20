@@ -2,8 +2,6 @@
 #include<vector>
 #include<algorithm>
 #include<unordered_map>
-#include<queue>
-#include<map>
 using namespace std;
 
 void glRotateRight(int x, int y, vector<vector<int>> &matrix) {
@@ -42,33 +40,6 @@ bool isSolved(const vector<vector<int>>& grid) {
   return true;
 }
 
-int lastThree(queue<int>& q) {
-  if (q.size() < 3)
-    return 2;
-
-  int first = q.front();
-  q.pop();
-  if (first == 0) {
-    while (!q.empty()) {
-      if (q.front() != 0)
-        return 2;
-      q.pop();
-    }
-    for (int i = 0; i < 3; i++)
-      q.push(0);
-    return 0;
-  } else if (first == 1) {
-    while (!q.empty()) {
-      if (q.front() != 1)
-        return 2;
-      q.pop();
-    }
-    for (int i = 0; i < 3; i++)
-      q.push(1);
-    return 1;
-  } else return 2;
-}
-
 bool verifyInput(const vector<vector<int>>& grid, int r, int c) {
   unordered_map<int, int> counts;
     for (const auto& row : grid) {
@@ -85,19 +56,7 @@ bool verifyInput(const vector<vector<int>>& grid, int r, int c) {
   return true;
 }
 
-bool verifyInputMoves(const vector<vector<int>>& grid, int r, int c, int moves) {
-  for (int i = 0; i < r; i++) {
-    for (int j = 0; j < c; j++) {
-      if (grid[i][j] < i - moves + 1 || grid[i][j] > i + moves + 1) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
-void Vault(int x, int y, vector<vector<int>> &grid, int r, int c, int maxMoves, int moves, int &minMoves, 
-                                                                    map<pair<int, int>, queue<int>> &history) {
+void Vault(vector<vector<int>> &grid, int r, int c, int maxMoves, int moves, int &minMoves) {
   if (moves > maxMoves || moves >= minMoves){
     return;
   }
@@ -107,10 +66,6 @@ void Vault(int x, int y, vector<vector<int>> &grid, int r, int c, int maxMoves, 
       minMoves = moves;
     return;
   }
-
-  /* if (verifyInputMoves(grid, r, c, maxMoves - moves) == false){
-    return;
-  } */
 
   int lines_sorted = 0;
   for (int t = r-1; t >= 0; t--){
@@ -136,43 +91,15 @@ void Vault(int x, int y, vector<vector<int>> &grid, int r, int c, int maxMoves, 
       if (grid[i][j] < i - (maxMoves-moves) + 1 || grid[i][j] > i + (maxMoves-moves) + 1) {
         return;
       }
-      // int key = x * c + y;
-      auto h = history.find({i,j});
-      // 0 -> left, 1 -> right
-      int last = lastThree(h->second);
-      if (h == history.end() || h->second.empty() ||  h->second.back() != 0) {
-        if (last != 1) {
-          // rotate right
-          glRotateRight(i, j, grid);
-          Vault(i, j, grid, r, c, maxMoves, moves+1, minMoves, history);
-          
-          // undo rotation
-          glRotateLeft(i, j, grid);
-          if (h == history.end()) 
-            history[{i,j}] = queue<int>();
+      glRotateRight(i, j, grid);
+      Vault(grid, r, c, maxMoves, moves+1, minMoves);
 
-          history[{i,j}].push(1);
-          if (history[{i,j}].size() > 3)
-            history[{i,j}].pop();
-        }
-      }
-      
-      if (h == history.end() || h->second.empty() || h->second.back() != 1) {
-        if (last != 0) {
-          // rotate left
-          glRotateLeft(i, j, grid);
-          Vault(i, j, grid, r, c, maxMoves, moves+1, minMoves, history);
+      glRotateRight(i, j, grid);
+      Vault(grid, r, c, maxMoves, moves+2, minMoves);
 
-          // undo rotation
-          glRotateRight(i, j, grid);
-          if (h == history.end())
-            history[{i,j}] = queue<int>();
-
-          history[{i,j}].push(0);
-          if (history[{i,j}].size() > 3)
-            history[{i,j}].pop();
-        }
-      }
+      glRotateRight(i, j, grid);
+      Vault(grid, r, c, maxMoves, moves+1, minMoves);
+      glRotateRight(i, j, grid);
     }
   }
 }
@@ -205,10 +132,8 @@ int main() {
       continue;
     }
 
-    // 0 -> left, 1 -> right
-    map<pair<int, int>, queue<int>> history;
     int minMoves = m + 1;
-    Vault(0, 0, grid, r, c, m, 0, minMoves, history);
+    Vault(grid, r, c, m, 0, minMoves);
     
     if (minMoves <= m)
       cout << minMoves << endl;
